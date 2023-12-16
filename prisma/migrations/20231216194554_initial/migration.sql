@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
 
@@ -9,9 +9,9 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Card" (
-    "id" TEXT NOT NULL,
+    "id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "description" TEXT[],
+    "description" JSONB NOT NULL,
     "image" TEXT NOT NULL,
 
     CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
@@ -19,10 +19,12 @@ CREATE TABLE "Card" (
 
 -- CreateTable
 CREATE TABLE "UserCard" (
-    "userId" TEXT NOT NULL,
-    "cardId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "cardId" INTEGER NOT NULL,
+    "amount" INTEGER NOT NULL,
 
-    CONSTRAINT "UserCard_pkey" PRIMARY KEY ("userId","cardId")
+    CONSTRAINT "UserCard_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
