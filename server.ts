@@ -1,8 +1,8 @@
 // express server
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const { PrismaClient } = require('@prisma/client')
+import express from 'express'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -15,8 +15,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 require('dotenv').config()
 require('./routes/card.routes')(app)
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.status(200).json({ message: 'Hello World!' })
+})
+
+app.get('/db', async (_req, res) => {
+  const cards = await prisma.card.findMany()
+  res.status(200).json(cards)
 })
 
 app.listen(port, () => {

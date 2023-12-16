@@ -1,6 +1,7 @@
-const axios = require('axios').default
+import axios from "axios"
+import { QueryParams } from "../types/card.types"
 
-exports.findLatestTen = (req, res) => {
+export const findLatestTen = (req: { query: QueryParams }, res: { send: (arg0: any) => void }) => {
   const {
     pageSize = '10',
     q = '',
@@ -23,10 +24,10 @@ exports.findLatestTen = (req, res) => {
   }
 
   axios.request(options)
-    .then(function (response) {
+    .then(function (response: { data: any }) {
       res.send(response.data)
     })
-    .catch(function (error) {
+    .catch(function (error: { message: any }) {
       console.error(error.message)
     })
 }
