@@ -1,7 +1,18 @@
 import axios from "axios"
 import { QueryParams } from "../types/card.types"
+import { findAllInDb } from "../services/card.service"
 
-export const findLatestTen = (req: { query: QueryParams }, res: { send: (arg0: any) => void }) => {
+export async function findAllInDbHandler(_req: Request, res: any) {
+  try {
+    const users = await findAllInDb();
+    return res.status(200).json(users);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+
+export async function findLatestTen(req: { query: QueryParams }, res: { send: (arg0: any) => void }) {
   const {
     pageSize = '10',
     q = '',
@@ -23,7 +34,7 @@ export const findLatestTen = (req: { query: QueryParams }, res: { send: (arg0: a
     }
   }
 
-  axios.request(options)
+  await axios.request(options)
     .then(function (response: { data: any }) {
       res.send(response.data)
     })

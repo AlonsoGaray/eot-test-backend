@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import { findLatestTen } from '../controllers/card.controller.js'
+import { findAllInDbHandler, findLatestTen } from '../controllers/card.controller'
 
 const router = Router()
 
-router.get('/', findLatestTen)
+router.get('/', findAllInDbHandler)
+router.get('/latest', findLatestTen)
 
 export default router
 
