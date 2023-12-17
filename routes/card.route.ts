@@ -3,8 +3,11 @@ import { findAllInDbHandler, findLatestTen } from '../controllers/card.controlle
 
 const router = Router()
 
-router.get('/', findAllInDbHandler)
-router.get('/latest', findLatestTen)
+router.get('/', (req, res, next) => {
+  findAllInDbHandler(req, res).catch(next)
+})
+router.get('/latest', (req, res, next) => {
+  findLatestTen(req, res).catch(next)
+})
 
 export default router
-

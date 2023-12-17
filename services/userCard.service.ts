@@ -1,20 +1,20 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type UserCard } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-export async function getUserCards(email: string) {
+export async function getUserCards (email: string): Promise<UserCard[] | null> {
   const userCards = await prisma.user.findUnique({
     where: {
-      email,
+      email
     },
     select: {
-      cards: true,
-    },
-  });
-  
-  if (!userCards) {
-    throw new Error(`User with email ${email} not found`);
+      cards: true
+    }
+  })
+
+  if (userCards === null || userCards === undefined) {
+    throw new Error(`User with email ${email} not found`)
   }
 
-  return userCards;
+  return userCards.cards
 }

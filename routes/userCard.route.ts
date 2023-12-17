@@ -1,8 +1,10 @@
-import { Router } from "express";
-import { getUserCardsHandler } from "../controllers/userCard.controller";
+import { Router } from 'express'
+import { getUserCardsHandler } from '../controllers/userCard.controller'
 
-const router = Router();
+const router = Router()
 
-router.get("/", getUserCardsHandler);
+router.get('/', (req, res, next) => {
+  getUserCardsHandler(req, res).catch(next)
+})
 
 export default router

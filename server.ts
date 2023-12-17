@@ -3,18 +3,20 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import routes from './routes/index'
+import cookieParser from 'cookie-parser'
+import dotenv from 'dotenv'
 
 const app = express()
-const port = process.env.PORT || 8080
+const port = (process.env.PORT != null) || 8080
 
-app.use(cors())
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
+app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
-require('dotenv').config()
+dotenv.config()
 
 app.get('/', (_req, res) => {
-  res.status(200).json({ message: 'Hello World!' })
+  res.status(200).json({ message: 'api is runing' })
 })
 
 app.listen(port, () => {

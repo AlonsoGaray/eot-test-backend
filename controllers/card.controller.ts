@@ -1,18 +1,17 @@
-import axios from "axios"
-import { QueryParams } from "../types/card.types"
-import { findAllInDb } from "../services/card.service"
+import axios from 'axios'
+import { type Request, type Response } from 'express'
+import { findAllInDb } from '../services/card.service'
 
-export async function findAllInDbHandler(_req: Request, res: any) {
+export async function findAllInDbHandler (_req: Request, res: Response): Promise<Response> {
   try {
-    const users = await findAllInDb();
-    return res.status(200).json(users);
+    const users = await findAllInDb()
+    return res.status(200).json(users)
   } catch (error: any) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message })
   }
 }
 
-
-export async function findLatestTen(req: { query: QueryParams }, res: { send: (arg0: any) => void }) {
+export async function findLatestTen (req: Request, res: Response): Promise<void> {
   const {
     pageSize = '10',
     q = '',
@@ -36,9 +35,9 @@ export async function findLatestTen(req: { query: QueryParams }, res: { send: (a
 
   await axios.request(options)
     .then(function (response: { data: any }) {
-      res.send(response.data)
+      return res.status(200).json(response.data)
     })
-    .catch(function (error: { message: any }) {
-      console.error(error.message)
+    .catch(function (error: any) {
+      return res.status(500).json({ error: error.message })
     })
 }
