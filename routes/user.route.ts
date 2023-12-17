@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { findAllHandler, registerHandler } from '../controllers/user.controller'
+import { loginHandler, logoutHandler } from '../auth/auth.controller'
 
 const router = Router()
 
@@ -8,6 +9,12 @@ router.get('/', (req, res, next) => {
 })
 router.post('/register', (req, res, next) => {
   registerHandler(req, res).catch(next)
+})
+router.post('/login', (req, res, next) => {
+  loginHandler(req, res).catch(next)
+})
+router.post('/logout', (req, res, next) => {
+  logoutHandler(req, res).catch(next)
 })
 
 export default router

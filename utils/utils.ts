@@ -1,4 +1,4 @@
-import { type UserEnum } from '../types/user.types'
+import { type UserEnum } from '../types/user.enum'
 
 export function isString (string: any): boolean {
   return typeof string === 'string' || string instanceof String
