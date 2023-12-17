@@ -34,3 +34,11 @@ model UserCard {
   user    User   @relation(fields: [userId], references: [id])
   card    Card   @relation(fields: [cardId], references: [id])
 }
+
+model Token {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  expireAt  DateTime
+}

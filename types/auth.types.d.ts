@@ -1,11 +1,3 @@
-export interface TokenPayload {
-  id: string
-}
+import { type Token } from '@prisma/client'
 
-export interface AccessToken extends TokenPayload {
-  exp: number
-}
-
-export interface RefreshToken extends TokenPayload {
-  exp: number
-}
+export type TokenPayload = Pick<Token, 'id'>

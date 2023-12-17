@@ -3,7 +3,7 @@ export enum TokenExpiration {
   RefreshToken = 7 * 24 * 60 * 60 * 1000
 }
 
-export enum Cookies {
+export enum TokenEnum {
   AccessToken = 'accessToken',
   RefreshToken = 'refreshToken',
 }

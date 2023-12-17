@@ -1,17 +1,10 @@
 import { type CookieOptions, type Response } from 'express'
-import jwt from 'jsonwebtoken'
-import { type User } from '@prisma/client'
-import { Cookies, TokenExpiration } from '../types/auth.enum'
-import { type RefreshToken, type AccessToken, type TokenPayload } from '../types/auth.types'
+import { PrismaClient, type Token, type User } from '@prisma/client'
+import { TokenEnum, TokenExpiration } from '../types/auth.enum'
 import { accessTokenSecret, isProduction, refreshTokenSecret } from '../config'
+import { signToken } from './jwt.service'
 
-function signAccessToken (payload: TokenPayload): string {
-  return jwt.sign(payload, accessTokenSecret, { expiresIn: TokenExpiration.AccessToken })
-}
-
-function signRefreshToken (payload: TokenPayload): string {
-  return jwt.sign(payload, refreshTokenSecret, { expiresIn: TokenExpiration.RefreshToken })
-}
+const prisma = new PrismaClient()
 
 const defaultCookieOptions: CookieOptions = {
   httpOnly: true,
@@ -23,46 +16,62 @@ const refreshTokenCookieOptions: CookieOptions = {
   maxAge: TokenExpiration.RefreshToken
 }
 
-const accessTokenCookieOptions: CookieOptions = {
-  ...defaultCookieOptions,
-  maxAge: TokenExpiration.AccessToken
-}
-
-export function verifyRefreshToken (token: string): RefreshToken {
-  return jwt.verify(token, refreshTokenSecret) as RefreshToken
-}
-
-export function verifyAccessToken (token: string): AccessToken {
-  return jwt.verify(token, accessTokenSecret) as AccessToken
-}
-
 export function buildTokens (user: User): { accessToken: string, refreshToken: string } {
   const { id } = user
 
-  const tokenPayload: TokenPayload = { id: String(id) }
-
-  const accessToken = signAccessToken(tokenPayload)
-  const refreshToken = signRefreshToken(tokenPayload)
+  const accessToken = signToken({ id }, accessTokenSecret, TokenExpiration.AccessToken)
+  const refreshToken = signToken({ id }, refreshTokenSecret, TokenExpiration.RefreshToken)
 
   return { accessToken, refreshToken }
 }
 
-export function setTokens (res: Response, access: string, refresh?: string): void {
-  res.cookie(Cookies.AccessToken, access, accessTokenCookieOptions)
-  if (refresh != null) res.cookie(Cookies.RefreshToken, refresh, refreshTokenCookieOptions)
+export async function setTokens (res: Response, refresh: string, userLogin: User): Promise<void> {
+  const expireAt = new Date()
+  expireAt.setDate(expireAt.getDate() + 7)
+
+  const found: Token | null = await prisma.token.findFirst({
+    where: {
+      userId: userLogin.id
+    }
+  })
+
+  if (found == null) {
+    await prisma.token.create({
+      data: {
+        userId: userLogin.id,
+        token: refresh,
+        expireAt
+      }
+    })
+  } else {
+    await prisma.token.update({
+      where: {
+        id: found.id
+      },
+      data: {
+        token: refresh,
+        expireAt
+      }
+    })
+  }
+
+  res.cookie(TokenEnum.RefreshToken, refresh, refreshTokenCookieOptions)
 }
 
-export function refreshTokens (current: RefreshToken): { accessToken: string, refreshToken: string } {
-  const accessPayload: TokenPayload = { id: current.id }
-  let refreshPayload: TokenPayload | undefined
+export function refreshAccessToken (token: Token): string {
+  const { id } = token
 
-  const accessToken = signAccessToken(accessPayload)
-  const refreshToken = (refreshPayload != null) ? signRefreshToken(refreshPayload) : ''
+  const accessToken = signToken({ id }, accessTokenSecret, TokenExpiration.AccessToken)
 
-  return { accessToken, refreshToken }
+  return accessToken
 }
 
-export function clearTokens (res: Response): void {
-  res.cookie(Cookies.AccessToken, '', { ...defaultCookieOptions, maxAge: 0 })
-  res.cookie(Cookies.RefreshToken, '', { ...defaultCookieOptions, maxAge: 0 })
+export async function clearTokens (res: Response, refreshToken: string): Promise<void> {
+  await prisma.token.delete({
+    where: {
+      token: refreshToken
+    }
+  })
+  res.cookie(TokenEnum.AccessToken, '', { ...defaultCookieOptions, maxAge: 0 })
+  res.cookie(TokenEnum.RefreshToken, '', { ...defaultCookieOptions, maxAge: 0 })
 }
