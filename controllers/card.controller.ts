@@ -1,15 +1,5 @@
 import axios from 'axios'
 import { type Request, type Response } from 'express'
-import { findAllInDb } from '../services/card.service'
-
-export async function findAllInDbHandler (_req: Request, res: Response): Promise<Response> {
-  try {
-    const users = await findAllInDb()
-    return res.status(200).json(users)
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message })
-  }
-}
 
 export async function findLatestTen (req: Request, res: Response): Promise<void> {
   const {
