@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { type Request, type Response } from 'express'
 
-export async function findLatestTen (req: Request, res: Response): Promise<void> {
+export async function searchCards (req: Request, res: Response): Promise<void> {
   const {
     pageSize = '10',
-    q = '',
+    q = 'name:*',
     page = '1',
-    orderBy = '-set.releaseDate,name'
+    orderBy = '-set.releaseDate'
   } = req.query
 
   const options = {
