@@ -1,12 +1,35 @@
-import { PrismaClient, type Card } from '@prisma/client'
+import axios from 'axios'
 
-const prisma = new PrismaClient()
+export async function findCardsById (userCards: any): Promise<any> {
+  const cardsArray = []
 
-/**
- * Retrieves all users from the database.
- * @returns {Promise<Cards[]>} A promise that resolves to an array of users.
- */
-export async function findAllInDb (): Promise<Card[]> {
-  const cards = await prisma.card.findMany()
-  return cards
+  try {
+    for (const card of userCards) {
+      const response = await axios.get(`${process.env.POKEMON_API_URL}/cards/${card.cardId}`, {
+        headers: {
+          'X-Api-Key': process.env.POKEMON_API_KEY
+        }
+      })
+      cardsArray.push(response.data.data)
+    }
+
+    const map = cardsArray.map(card => {
+      return {
+        id: card.id,
+        name: card.name,
+        number: card.number,
+        set: {
+          name: card.set.name,
+          series: card.set.series,
+          total: card.set.total
+        },
+        images: {
+          small: card.images.small
+        }
+      }
+    })
+    return { data: map, totalCount: map.length }
+  } catch (error) {
+    throw new Error("Couldn't find card")
+  }
 }

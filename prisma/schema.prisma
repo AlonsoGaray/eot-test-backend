@@ -10,35 +10,9 @@ datasource db {
   url = env("POSTGRES_URL")
 }
 
-model User {
-  id            Int   @id @default(autoincrement())
-  email         String   @unique
-  password      String   
-  name          String
-  cards         UserCard[]
-}
-
-model Card {
-  id          String     @id @unique
-  name        String
-  description Json
-  image       String
-  users       UserCard[]
-}
-
 model UserCard {
-  id      Int   @id @default(autoincrement())
-  userId  Int
+  id      Int     @id @default(autoincrement())
+  userId  String
   cardId  String
   amount  Int
-  user    User   @relation(fields: [userId], references: [id])
-  card    Card   @relation(fields: [cardId], references: [id])
-}
-
-model Token {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  token     String    @unique
-  createdAt DateTime  @default(now())
-  expireAt  DateTime
 }

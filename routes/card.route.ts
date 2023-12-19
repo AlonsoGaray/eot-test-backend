@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import { findAllInDbHandler, findLatestTen } from '../controllers/card.controller'
+import { searchCards, findCardsByIdHandler } from '../controllers/card.controller'
 
 const router = Router()
 
 router.get('/', (req, res, next) => {
-  findAllInDbHandler(req, res).catch(next)
+  searchCards(req, res).catch(next)
 })
-router.get('/latest', (req, res, next) => {
-  findLatestTen(req, res).catch(next)
+router.get('/userCards', (req, res, next) => {
+  findCardsByIdHandler(req, res).catch(next)
 })
 
 export default router

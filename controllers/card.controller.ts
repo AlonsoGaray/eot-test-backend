@@ -1,22 +1,13 @@
 import axios from 'axios'
 import { type Request, type Response } from 'express'
-import { findAllInDb } from '../services/card.service'
+import { findCardsById } from '../services/card.service'
 
-export async function findAllInDbHandler (_req: Request, res: Response): Promise<Response> {
-  try {
-    const users = await findAllInDb()
-    return res.status(200).json(users)
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message })
-  }
-}
-
-export async function findLatestTen (req: Request, res: Response): Promise<void> {
+export async function searchCards (req: Request, res: Response): Promise<void> {
   const {
     pageSize = '10',
-    q = '',
+    q = 'name:*',
     page = '1',
-    orderBy = '-set.releaseDate,name'
+    orderBy = '-set.releaseDate'
   } = req.query
 
   const options = {
@@ -40,4 +31,15 @@ export async function findLatestTen (req: Request, res: Response): Promise<void>
     .catch(function (error: any) {
       return res.status(500).json({ error: error.message })
     })
+}
+
+export async function findCardsByIdHandler (req: Request, res: Response): Promise<void> {
+  const { userCards } = req.query
+  try {
+    const cardsArray = await findCardsById(userCards)
+
+    res.status(200).json(cardsArray)
+  } catch (error: any) {
+    res.status(400).json({ error: error.message })
+  }
 }
