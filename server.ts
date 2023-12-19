@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 
 const app = express()
-const port = (process.env.PORT != null) || 8080
+const port = process.env.PORT || 3001
 
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }))
 app.use(cookieParser())
