@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { type Request, type Response } from 'express'
+import { findCardsById } from '../services/card.service'
 
 export async function searchCards (req: Request, res: Response): Promise<void> {
   const {
@@ -30,4 +31,15 @@ export async function searchCards (req: Request, res: Response): Promise<void> {
     .catch(function (error: any) {
       return res.status(500).json({ error: error.message })
     })
+}
+
+export async function findCardsByIdHandler (req: Request, res: Response): Promise<void> {
+  const { userCards } = req.query
+  try {
+    const cardsArray = await findCardsById(userCards)
+
+    res.status(200).json(cardsArray)
+  } catch (error: any) {
+    res.status(400).json({ error: error.message })
+  }
 }
