@@ -3,12 +3,11 @@ import { PrismaClient, type UserCard } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export async function getUserCards (userId: string): Promise<UserCard[]> {
-  const asd = await prisma.userCard.findMany({
+  return await prisma.userCard.findMany({
     where: {
       userId
     }
   })
-  return asd
 }
 
 export async function findUserCardRelation (userId: string, cardId: string): Promise<any> {
