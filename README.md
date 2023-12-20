@@ -1,5 +1,8 @@
 # eot-test-backend
 
+## Deploy
+Deployed to [Render](https://render.com/)
+
 ## Backend Built With
 
 The main frameworks/libraries/dependencies that I used for this project are the following:
@@ -14,4 +17,4 @@ The main frameworks/libraries/dependencies that I used for this project are the 
 
 Alonso Garay - alonsogarayp@gmail.com
 
-Project Link: [https://github.com/AlonsoGaray/interguide-front](https://github.com/AlonsoGaray/interguide-front)
+Project Link: [https://github.com/AlonsoGaray/eot-test-backend](https://github.com/AlonsoGaray/eot-test-backend)
