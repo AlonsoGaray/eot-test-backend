@@ -17,4 +17,5 @@ The main frameworks/libraries/dependencies that I used for this project are the 
 
 Alonso Garay - alonsogarayp@gmail.com
 
-Project Link: [https://github.com/AlonsoGaray/eot-test-backend](https://github.com/AlonsoGaray/eot-test-backend)
+Backend Project Link: [https://github.com/AlonsoGaray/eot-test-backend](https://github.com/AlonsoGaray/eot-test-backend)    
+Frontend Project Link: [https://github.com/AlonsoGaray/eot-test-frontend](https://github.com/AlonsoGaray/eot-test-frontend)
